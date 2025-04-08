@@ -6,20 +6,21 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ===== НАСТРОЙКИ =====
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHANNEL_USERNAME = '@mysticbloomsflower';
+const bot = new TelegramBot(TOKEN, { polling: false }); // изначально без polling
 
-const bot = new TelegramBot(TOKEN, { polling: false });
-
-// Удаляем webhook перед запуском polling
+// Удаляем старый webhook и запускаем polling
 bot.deleteWebhook().then(() => {
-  console.log('🚫 Webhook удалён (если был)');
+  console.log('✅ Webhook удалён, запускаем polling...');
   bot.startPolling();
-  console.log('🤖 Бот запущен, ожидаем сообщения...');
+}).catch((err) => {
+  console.error('❌ Ошибка при удалении webhook:', err.message);
 });
 
-// ===== ОБРАБОТКА СООБЩЕНИЙ =====
+console.log('🤖 Бот запускается...');
+
+// Обработка новых сообщений
 bot.on('channel_post', (msg) => {
   console.log('📩 Получено сообщение:', msg);
 
@@ -48,9 +49,8 @@ bot.on('channel_post', (msg) => {
   }
 });
 
-// ===== СТАТИКА =====
+// Сервер для статики
 app.use('/public', express.static(path.join(__dirname, 'public')));
-
 app.get('/', (req, res) => {
   res.send('Бот работает. Проверь /public/posts.json');
 });
