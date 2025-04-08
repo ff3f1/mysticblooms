@@ -1,6 +1,9 @@
 {
   "type": "module",
   "scripts": {
+  "parse": "node src/parser.js"
+}
+
     "start": "node server.js",
     "parse": "node bot.js"
   },
