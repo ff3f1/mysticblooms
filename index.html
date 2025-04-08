@@ -166,3 +166,21 @@
   </script>
 </body>
 </html>
+<div id="posts">Загрузка...</div>
+
+<script>
+  fetch('https://mysticblooms.onrender.com/public/posts.json')
+    .then(res => res.json())
+    .then(posts => {
+      const container = document.getElementById('posts');
+      container.innerHTML = '';
+      posts.forEach(post => {
+        const div = document.createElement('div');
+        div.innerHTML = `<p>${post.text}</p><hr>`;
+        container.appendChild(div);
+      });
+    })
+    .catch(() => {
+      document.getElementById('posts').innerText = 'Не удалось загрузить посты 😢';
+    });
+</script>
