@@ -9,11 +9,17 @@ const PORT = process.env.PORT || 3000;
 // ===== НАСТРОЙКИ =====
 const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHANNEL_USERNAME = '@mysticbloomsflower';
-const bot = new TelegramBot(TOKEN, { polling: true });
 
-console.log('🤖 Бот запущен, ожидаем сообщения...');
+const bot = new TelegramBot(TOKEN, { polling: false });
 
-// ===== СЛУШАЕМ ВСЁ =====
+// Удаляем webhook перед запуском polling
+bot.deleteWebhook().then(() => {
+  console.log('🚫 Webhook удалён (если был)');
+  bot.startPolling();
+  console.log('🤖 Бот запущен, ожидаем сообщения...');
+});
+
+// ===== ОБРАБОТКА СООБЩЕНИЙ =====
 bot.on('channel_post', (msg) => {
   console.log('📩 Получено сообщение:', msg);
 
