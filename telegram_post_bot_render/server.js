@@ -48,3 +48,21 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+// ===== ПРОКСИ ДЛЯ ЗАГРУЗКИ ФОТО ИЗ ТГ =====
+app.get('/photo/:fileId', async (req, res) => {
+  const fileId = req.params.fileId;
+
+  try {
+    const file = await bot.getFile(fileId);
+    const fileUrl = `https://api.telegram.org/file/bot${TOKEN}/${file.file_path}`;
+    
+    const response = await fetch(fileUrl);
+    const buffer = await response.arrayBuffer();
+
+    res.setHeader('Content-Type', 'image/jpeg');
+    res.send(Buffer.from(buffer));
+  } catch (err) {
+    console.error('Ошибка при загрузке фото:', err);
+    res.status(500).send('Ошибка при загрузке фото');
+  }
+});
