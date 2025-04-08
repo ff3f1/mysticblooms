@@ -1,84 +1,55 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mystic Blooms | Цветы в Москве</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mystic Blooms</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #1a1a1a;
-      color: #f1f1f1;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom right, #1c0026, #2d003f);
+      color: white;
+      text-align: center;
     }
-
     header {
-      background: #2c003e;
-      color: #f8f0ff;
-      text-align: center;
-      padding: 40px 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      padding: 2rem;
+      background: linear-gradient(to right, #5a007a, #7a00b3);
     }
-
     header h1 {
-      font-size: 2.8em;
+      font-size: 3rem;
       margin: 0;
-      letter-spacing: 1px;
     }
-
     header p {
-      margin: 12px 0 0;
-      font-size: 1.1em;
-      opacity: 0.9;
+      margin: 0.5rem 0 1.5rem;
+      font-size: 1.2rem;
     }
-
-    .container {
-      max-width: 900px;
-      margin: 50px auto;
-      padding: 0 20px;
+    .button {
+      background-color: #c057ff;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 10px #c057ff;
+      transition: all 0.3s ease;
     }
-
-    .sk-ww-telegram-channel {
-      width: 100%;
-      max-width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      filter: brightness(0.97);
+    .button:hover {
+      background-color: #a23de0;
     }
-
-    .telegram-button {
-      display: inline-block;
-      background: #a64bf4;
-      color: #fff;
-      padding: 12px 24px;
-      border-radius: 30px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background 0.3s;
-      box-shadow: 0 4px 15px rgba(166, 75, 244, 0.4);
-      margin-top: 30px;
+    .widget-container {
+      margin: 2rem auto;
+      max-width: 1000px;
+      background: #1c0026;
+      border-radius: 1rem;
+      padding: 1rem;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
     }
-
-    .telegram-button:hover {
-      background: #c170ff;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #2b2b2b;
-      color: #aaa;
-      font-size: 0.85em;
-      margin-top: 60px;
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 2em;
-      }
-      header p {
-        font-size: 1em;
-      }
+    .sk-ww-telegram-channel iframe {
+      width: 100% !important;
+      border-radius: 1rem !important;
     }
   </style>
 </head>
@@ -86,16 +57,13 @@
   <header>
     <h1>Mystic Blooms</h1>
     <p>Букеты и композиции из свежих цветов. Доставка по Москве 🌸</p>
-    <a class="telegram-button" href="https://t.me/mysticbloomsflower" target="_blank">Написать в Telegram</a>
+    <a href="https://t.me/mysticbloomsflower" target="_blank">
+      <button class="button">Написать в Telegram</button>
+    </a>
   </header>
-
-  <div class="container">
+  <div class="widget-container">
     <div class='sk-ww-telegram-channel' data-embed-id='25543995'></div>
-    <script src='https://widgets.sociablekit.com/telegram-channel/widget.js' defer></script>
   </div>
-
-  <footer>
-    © 2025 Mystic Blooms | Южное Бутово, Москва
-  </footer>
+  <script src='https://widgets.sociablekit.com/telegram-channel/widget.js' defer></script>
 </body>
 </html>
