@@ -1,11 +1,10 @@
 import { TelegramClient } from "telegram";
-import { StringSession } from "telegram/sessions"; // ✅ ВАЖНО!
+import { StringSession } from "telegram/sessions/index.js"; // ✅ ВАЖНО для Node 22!
 import input from "input";
 import fs from "fs";
 import dotenv from "dotenv";
 
 dotenv.config();
-
 
 const apiId = parseInt(process.env.API_ID);
 const apiHash = process.env.API_HASH;
@@ -31,7 +30,7 @@ async function run() {
     id: msg.id,
     text: msg.message,
     date: msg.date,
-    media: msg.media ? true : false,
+    media: !!msg.media,
   }));
 
   fs.writeFileSync("public/posts.json", JSON.stringify(posts, null, 2));
