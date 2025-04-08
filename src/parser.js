@@ -1,5 +1,5 @@
 import { TelegramClient } from "telegram";
-import { StringSession } from "telegram/tl/sessions/StringSession.js";
+import { StringSession } from "telegram/tl/sessions/StringSession.js"; // 👈 ВАЖНО!
 import input from "input";
 import fs from "fs";
 import dotenv from "dotenv";
