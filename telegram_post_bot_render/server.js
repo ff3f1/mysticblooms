@@ -14,7 +14,7 @@ const bot = new TelegramBot(TOKEN, { polling: true });
 console.log('🤖 Бот запущен, ожидаем сообщения...');
 
 // ===== СЛУШАЕМ ВСЁ =====
-bot.on('message', (msg) => {
+bot.on('channel_post', (msg) => {
   console.log('📩 Получено сообщение:', msg);
 
   if (msg.chat && msg.chat.username === CHANNEL_USERNAME.replace('@', '')) {
