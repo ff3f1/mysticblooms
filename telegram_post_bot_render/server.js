@@ -13,14 +13,26 @@ const CHANNEL_USERNAME = '@mysticbloomsflower';
 const bot = new TelegramBot(TOKEN, { polling: true });
 
 // ===== СЛУШАЕМ ПОСТЫ =====
-bot.on('message', (msg) => {
+bot.on('message', async (msg) => {
   if (msg.chat && msg.chat.username === CHANNEL_USERNAME.replace('@', '')) {
     const post = {
       message_id: msg.message_id,
       date: msg.date,
       text: msg.text || '',
-      photo: msg.photo || null
+      photo: null
     };
+
+    // === Если есть фото — получаем прямую ссылку ===
+    if (msg.photo && msg.photo.length > 0) {
+      const fileId = msg.photo[msg.photo.length - 1].file_id;
+      try {
+        const file = await bot.getFile(fileId);
+        const fileUrl = `https://api.telegram.org/file/bot${TOKEN}/${file.file_path}`;
+        post.photo = fileUrl;
+      } catch (error) {
+        console.error('Ошибка при получении фото:', error);
+      }
+    }
 
     const postsPath = path.join(__dirname, 'public', 'posts.json');
     let posts = [];
@@ -29,14 +41,13 @@ bot.on('message', (msg) => {
       posts = JSON.parse(fs.readFileSync(postsPath));
     }
 
-    // Добавляем новый пост в начало списка
     posts.unshift(post);
-    // Ограничим до 50 постов
     posts = posts.slice(0, 50);
 
     fs.writeFileSync(postsPath, JSON.stringify(posts, null, 2));
   }
 });
+
 
 // ===== ОТДАЁМ posts.json =====
 app.use('/public', express.static(path.join(__dirname, 'public')));
