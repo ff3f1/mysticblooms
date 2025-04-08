@@ -1,4 +1,3 @@
-
 const express = require('express');
 const fs = require('fs');
 const TelegramBot = require('node-telegram-bot-api');
@@ -7,13 +6,16 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ===== НАСТРОЙКИ =====
-const TOKEN = process.env.BOT_TOKEN;
+const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const CHANNEL_USERNAME = '@mysticbloomsflower';
-const bot = new TelegramBot(TOKEN, { polling: true });
+const bot = new TelegramBot(TOKEN, { polling: true }); // сразу polling: true
 
-// ===== СЛУШАЕМ ПОСТЫ =====
-bot.on('message', (msg) => {
+console.log('🤖 Бот запущен, ожидаем сообщения...');
+
+// Обработка новых сообщений
+bot.on('channel_post', (msg) => {
+  console.log('📩 Получено сообщение:', msg);
+
   if (msg.chat && msg.chat.username === CHANNEL_USERNAME.replace('@', '')) {
     const post = {
       message_id: msg.message_id,
@@ -29,22 +31,22 @@ bot.on('message', (msg) => {
       posts = JSON.parse(fs.readFileSync(postsPath));
     }
 
-    // Добавляем новый пост в начало списка
     posts.unshift(post);
-    // Ограничим до 50 постов
     posts = posts.slice(0, 50);
 
     fs.writeFileSync(postsPath, JSON.stringify(posts, null, 2));
+    console.log('✅ Пост сохранён:', post.text.slice(0, 30));
+  } else {
+    console.log('⚠️ Сообщение не из нужного канала:', msg.chat?.username);
   }
 });
 
-// ===== ОТДАЁМ posts.json =====
+// Сервер для статики
 app.use('/public', express.static(path.join(__dirname, 'public')));
-
 app.get('/', (req, res) => {
-  res.send('Бот работает. /public/posts.json');
+  res.send('Бот работает. Проверь /public/posts.json');
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🌐 Сервер слушает порт ${PORT}`);
 });
