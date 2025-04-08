@@ -1,12 +1,2 @@
-# игнорим зависимости
 node_modules
 .env
-.DS_Store
-*.log
-
-# игнорим сборки
-dist
-build
-
-# другие мусорные файлы
-.cache

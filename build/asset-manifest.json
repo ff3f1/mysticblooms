@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/mysticblooms/static/css/main.43a74b3e.css",
+    "main.js": "/mysticblooms/static/js/main.09b1f104.js",
+    "index.html": "/mysticblooms/index.html",
+    "main.43a74b3e.css.map": "/mysticblooms/static/css/main.43a74b3e.css.map",
+    "main.09b1f104.js.map": "/mysticblooms/static/js/main.09b1f104.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.43a74b3e.css",
+    "static/js/main.09b1f104.js"
+  ]
+}
