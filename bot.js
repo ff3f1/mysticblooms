@@ -1,16 +1,35 @@
-require('dotenv').config();
-const { Telegraf } = require('telegraf');
-const fs = require('fs');
-const path = require('path');
+import { TelegramClient } from "telegram";
+import { StringSession } from "telegram/sessions";
+import input from "input";
+import fs from "fs";
+import dotenv from "dotenv";
+dotenv.config();
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const apiId = parseInt(process.env.API_ID);
+const apiHash = process.env.API_HASH;
+const session = new StringSession(process.env.SESSION_STRING);
 
-// Заглушка: эмуляция поста (можно заменить реальным fetch из Telegram API или базы)
-bot.command('latest', (ctx) => {
-  const post = '🌸 Последний пост с канала Mystic Blooms';
-  ctx.reply(post);
-});
+const client = new TelegramClient(session, apiId, apiHash, { connectionRetries: 5 });
 
-bot.launch().then(() => {
-  console.log('✅ Бот запущен');
-});
+async function run() {
+  await client.start({ phoneNumber: async () => input.text("Phone: "),
+    password: async () => input.text("Password: "),
+    phoneCode: async () => input.text("Code: "),
+    onError: (err) => console.log(err),
+  });
+  console.log("You are logged in");
+
+  const result = await client.getMessages("mysticbloomsflower", { limit: 20 });
+
+  const posts = result.map(msg => ({
+    id: msg.id,
+    text: msg.message,
+    date: msg.date,
+    media: msg.media ? true : false,
+  }));
+
+  fs.writeFileSync("posts.json", JSON.stringify(posts, null, 2));
+  console.log("Saved to posts.json");
+}
+
+run();
