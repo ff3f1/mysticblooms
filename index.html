@@ -184,3 +184,40 @@
       document.getElementById('posts').innerText = 'Не удалось загрузить посты 😢';
     });
 </script>
+<script>
+  fetch('https://mysticblooms.onrender.com/public/posts.json')
+    .then(res => res.json())
+    .then(posts => {
+      const container = document.getElementById('posts');
+      container.innerHTML = '';
+
+      posts.forEach(post => {
+        const div = document.createElement('div');
+        div.className = 'post';
+
+        const image = post.photo
+          ? `https://api.telegram.org/file/bot${'YOUR_TOKEN_HERE'}/photos/${post.photo[post.photo.length - 1].file_id}`
+          : 'https://placehold.co/600x400?text=Mystic+Blooms';
+
+        div.innerHTML = `
+          <img src="${image}" alt="Post image" />
+          <div class="content">
+            <h3>Публикация</h3>
+            <p>${post.text?.slice(0, 80) || ''}...</p>
+          </div>
+        `;
+
+        div.onclick = () => openModal({
+          title: 'Публикация',
+          image: image,
+          text: post.text
+        });
+
+        container.appendChild(div);
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById('posts').innerText = 'Не удалось загрузить посты 😢';
+    });
+</script>
