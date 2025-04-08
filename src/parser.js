@@ -1,5 +1,5 @@
 import { TelegramClient } from "telegram";
-import { StringSession } from "telegram/tl/sessions/StringSession.js"; // 👈 ВАЖНО!
+import { StringSession } from "telegram/tl/sessions/StringSession.js";
 import input from "input";
 import fs from "fs";
 import dotenv from "dotenv";
@@ -16,9 +16,9 @@ const client = new TelegramClient(session, apiId, apiHash, {
 
 async function run() {
   await client.start({
-    phoneNumber: async () => await input.text("Phone: "),
-    password: async () => await input.text("Password: "),
-    phoneCode: async () => await input.text("Code: "),
+    phoneNumber: async () => input.text("Phone: "),
+    password: async () => input.text("Password: "),
+    phoneCode: async () => input.text("Code: "),
     onError: (err) => console.log(err),
   });
 
