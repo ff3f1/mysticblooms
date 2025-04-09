@@ -54,6 +54,7 @@ async function run() {
       date: msg.date,
       media: !!msg.media,
     }));
+  console.log("📋 Parsed posts:", posts);
 
   fs.writeFileSync("public/posts.json", JSON.stringify(posts, null, 2));
   console.log("📦 Saved to public/posts.json");
