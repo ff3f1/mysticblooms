@@ -16,6 +16,12 @@ const client = new TelegramClient(session, apiId, apiHash, {
 
 async function run() {
   await client.start({
+    if (!process.env.SESSION_STRING) {
+  const string = client.session.save();
+  fs.appendFileSync(".env", `\nSESSION_STRING=${string}`);
+  console.log("✅ Session string saved to .env");
+}
+
     phoneNumber: async () => input.text("Phone: "),
     password: async () => input.text("Password: "),
     phoneCode: async () => input.text("Code: "),
