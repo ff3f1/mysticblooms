@@ -8,29 +8,39 @@ dotenv.config();
 
 const apiId = parseInt(process.env.API_ID);
 const apiHash = process.env.API_HASH;
-let session = new StringSession(process.env.SESSION_STRING || "");
+const SESSION_FILE = "./session.txt";
 
-const client = new TelegramClient(session, apiId, apiHash, {
+let stringSession;
+
+if (fs.existsSync(SESSION_FILE)) {
+  const savedSession = fs.readFileSync(SESSION_FILE, "utf8");
+  stringSession = new StringSession(savedSession.trim());
+  console.log("✅ Используется сохранённая сессия");
+} else {
+  stringSession = new StringSession("");
+  console.log("📱 Первая авторизация, нужно ввести номер");
+}
+
+const client = new TelegramClient(stringSession, apiId, apiHash, {
   connectionRetries: 5,
 });
 
 async function run() {
-  if (!process.env.SESSION_STRING) {
-    await client.start({
-      phoneNumber: async () => await input.text("Phone: "),
-      password: async () => await input.text("Password: "),
-      phoneCode: async () => await input.text("Code: "),
-      onError: (err) => console.log("Auth error:", err),
-    });
+  await client.start({
+    phoneNumber: async () => await input.text("📞 Телефон: "),
+    password: async () => await input.text("🔐 Пароль: "),
+    phoneCode: async () => await input.text("📩 Код: "),
+    onError: (err) => console.log("❌ Ошибка:", err),
+  });
 
-    const string = client.session.save();
-    fs.appendFileSync(".env", `\nSESSION_STRING=${string}`);
-    console.log("✅ SESSION_STRING сохранён в .env");
-  } else {
-    await client.connect();
-    console.log("✅ Logged in через сохранённую сессию");
-  }
+  console.log("✅ Вошли в аккаунт");
 
+  // Сохраняем сессию в файл
+  const sessionStr = client.session.save();
+  fs.writeFileSync(SESSION_FILE, sessionStr);
+  console.log("💾 Сессия сохранена в session.txt");
+
+  // Получаем посты
   const channel = await client.getEntity("mysticbloomsflower");
   const messages = await client.getMessages(channel, { limit: 20 });
 
@@ -44,7 +54,9 @@ async function run() {
     }));
 
   fs.writeFileSync("public/posts.json", JSON.stringify(posts, null, 2));
-  console.log("📦 Saved to public/posts.json");
+  console.log("📦 Посты сохранены в public/posts.json");
+
+  process.exit();
 }
 
 run();
