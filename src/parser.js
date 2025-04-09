@@ -10,9 +10,21 @@ const apiId = parseInt(process.env.API_ID);
 const apiHash = process.env.API_HASH;
 const session = new StringSession(process.env.SESSION_STRING);
 
-const client = new TelegramClient(session, apiId, apiHash, {
-  connectionRetries: 5,
-});
+import { StringSession } from "telegram/sessions";
+import fs from "fs";
+
+// Путь до файла, где будет сохраняться сессия
+const SESSION_FILE = "./session.txt";
+
+let stringSession = new StringSession("");
+
+if (fs.existsSync(SESSION_FILE)) {
+  const savedSession = fs.readFileSync(SESSION_FILE, "utf8");
+  stringSession = new StringSession(savedSession);
+}
+
+const client = new TelegramClient(stringSession, apiId, apiHash, { connectionRetries: 5 });
+
 
 async function run() {
   await client.start({
