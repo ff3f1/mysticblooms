@@ -40,7 +40,8 @@ async function run() {
   }
 
   // ✅ получаем канал
-  const channel = await client.getEntity("mysticbloomsflower");
+  const channel = await client.getEntity("https://t.me/mysticbloomsflower");
+
 
   // ✅ получаем сообщения
   const result = await client.getMessages(channel, { limit: 20 });
