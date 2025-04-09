@@ -1,5 +1,5 @@
 import { TelegramClient } from "telegram";
-import { StringSession } from "telegram/sessions/index.js";
+import { StringSession } from "telegram/sessions";
 import input from "input";
 import fs from "fs";
 import dotenv from "dotenv";
@@ -8,14 +8,8 @@ dotenv.config();
 
 const apiId = parseInt(process.env.API_ID);
 const apiHash = process.env.API_HASH;
-const session = new StringSession(process.env.SESSION_STRING);
 
-import { StringSession } from "telegram/sessions";
-import fs from "fs";
-
-// Путь до файла, где будет сохраняться сессия
 const SESSION_FILE = "./session.txt";
-
 let stringSession = new StringSession("");
 
 if (fs.existsSync(SESSION_FILE)) {
@@ -25,15 +19,8 @@ if (fs.existsSync(SESSION_FILE)) {
 
 const client = new TelegramClient(stringSession, apiId, apiHash, { connectionRetries: 5 });
 
-
 async function run() {
   await client.start({
-    if (!process.env.SESSION_STRING) {
-  const string = client.session.save();
-  fs.appendFileSync(".env", `\nSESSION_STRING=${string}`);
-  console.log("✅ Session string saved to .env");
-}
-
     phoneNumber: async () => input.text("Phone: "),
     password: async () => input.text("Password: "),
     phoneCode: async () => input.text("Code: "),
@@ -42,10 +29,20 @@ async function run() {
 
   console.log("✅ Logged in");
 
-  // ✅ сначала получаем канал
+  // ✅ сохраняем сессию
+  fs.writeFileSync(SESSION_FILE, client.session.save());
+
+  // ✅ если SESSION_STRING ещё не в .env — добавим
+  if (!process.env.SESSION_STRING) {
+    const string = client.session.save();
+    fs.appendFileSync(".env", `\nSESSION_STRING=${string}`);
+    console.log("✅ Session string saved to .env");
+  }
+
+  // ✅ получаем канал
   const channel = await client.getEntity("mysticbloomsflower");
 
-  // ✅ потом получаем сообщения
+  // ✅ получаем сообщения
   const result = await client.getMessages(channel, { limit: 20 });
 
   const posts = result
