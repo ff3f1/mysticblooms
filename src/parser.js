@@ -1,5 +1,5 @@
 import { TelegramClient } from "telegram";
-import { StringSession } from "telegram/sessions/index.js"; // ✅ ВАЖНО для Node 22!
+import { StringSession } from "telegram/sessions/index.js";
 import input from "input";
 import fs from "fs";
 import dotenv from "dotenv";
@@ -24,14 +24,20 @@ async function run() {
 
   console.log("✅ Logged in");
 
-  const result = await client.getMessages("mysticbloomsflower", { limit: 20 });
+  // ✅ сначала получаем канал
+  const channel = await client.getEntity("mysticbloomsflower");
 
-  const posts = result.map((msg) => ({
-    id: msg.id,
-    text: msg.message,
-    date: msg.date,
-    media: !!msg.media,
-  }));
+  // ✅ потом получаем сообщения
+  const result = await client.getMessages(channel, { limit: 20 });
+
+  const posts = result
+    .filter(msg => msg.message) // убрать пустые
+    .map((msg) => ({
+      id: msg.id,
+      text: msg.message,
+      date: msg.date,
+      media: !!msg.media,
+    }));
 
   fs.writeFileSync("public/posts.json", JSON.stringify(posts, null, 2));
   console.log("📦 Saved to public/posts.json");
